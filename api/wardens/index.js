@@ -11,7 +11,7 @@ const endpoint = connectionString.split(';').find(s => s.startsWith('AccountEndp
 const key = connectionString.split(';').find(s => s.startsWith('AccountKey=')).split('=')[1];
 
 const client = new CosmosClient({ endpoint, key });
-const database = client.database('fire-warden-db');
+const database = client.database('bs3221cosmosdb');
 const container = database.container('wardens');
 
 module.exports = async function (context, req) {

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import AddWarden from './components/AddWarden'
 
 const locations = [
   "Alwyn Hall", "Beech Glade", "Bowers Building", "Burma Road Student Village",
@@ -58,64 +59,19 @@ export default function App() {
   }
 
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">Fire Warden Location Tracker</h1>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 mb-8">
-        <input
-          type="text"
-          placeholder="Staff Number"
-          value={form.staff_number}
-          onChange={(e) => setForm({ ...form, staff_number: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="First Name"
-          value={form.first_name}
-          onChange={(e) => setForm({ ...form, first_name: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Last Name"
-          value={form.last_name}
-          onChange={(e) => setForm({ ...form, last_name: e.target.value })}
-          required
-        />
-        <select
-          value={form.location}
-          onChange={(e) => setForm({ ...form, location: e.target.value })}
-        >
-          {locations.map((loc) => (
-            <option key={loc} value={loc}>{loc}</option>
-          ))}
-        </select>
-        <button type="submit">Submit</button>
-      </form>
-      <table className="w-full border-collapse">
-        <thead>
-          <tr>
-            <th className="border p-2">Name</th>
-            <th className="border p-2">Staff No.</th>
-            <th className="border p-2">Location</th>
-            <th className="border p-2">Time</th>
-            <th className="border p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {wardens.map((w) => (
-            <tr key={w.id}>
-              <td className="border p-2">{w.first_name} {w.last_name}</td>
-              <td className="border p-2">{w.staff_number}</td>
-              <td className="border p-2">{w.location}</td>
-              <td className="border p-2">{new Date(w.timestamp).toLocaleString()}</td>
-              <td className="border p-2">
-                <button onClick={() => handleDelete(w.id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-white shadow">
+        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-gray-900">
+            Fire Warden Location Tracker
+          </h1>
+        </div>
+      </header>
+      <main>
+        <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <AddWarden />
+        </div>
+      </main>
     </div>
   );
 } 
