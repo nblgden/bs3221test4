@@ -40,11 +40,27 @@ module.exports = async function (context, req) {
         break;
 
       case 'DELETE':
-        const id = req.params.id;
-        await container.item(id).delete();
-        context.res = {
-          status: 204
-        };
+        const id = context.bindingData.id;
+        if (!id) {
+          context.res = {
+            status: 400,
+            body: 'ID is required for deletion'
+          };
+          return;
+        }
+        
+        try {
+          await container.item(id).delete();
+          context.res = {
+            status: 204
+          };
+        } catch (deleteError) {
+          context.log.error('Delete error:', deleteError);
+          context.res = {
+            status: 404,
+            body: 'Warden not found'
+          };
+        }
         break;
 
       default:
