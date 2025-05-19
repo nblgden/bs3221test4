@@ -14,13 +14,20 @@ export default function WardenList({ wardens, onDelete }) {
   };
 
   const handleDelete = (warden) => {
-    console.log('Warden object:', warden); // Debug log
-    const id = warden.id || warden._id; // Try both id and _id
+    console.log('Full warden object:', JSON.stringify(warden, null, 2));
+    console.log('Available properties:', Object.keys(warden));
+    
+    // Try to find the ID in various possible locations
+    const id = warden.id || warden._id || warden.Id || warden.ID;
+    console.log('Found ID:', id);
+    
     if (!id) {
-      console.error('No ID found for warden:', warden);
+      console.error('No ID found in warden object:', warden);
       alert('Cannot delete: No ID found for this warden');
       return;
     }
+    
+    console.log('Attempting to delete warden with ID:', id);
     onDelete(id);
   };
 
@@ -32,34 +39,37 @@ export default function WardenList({ wardens, onDelete }) {
       </div>
       <div className="border-t border-gray-200">
         <ul className="divide-y divide-gray-200">
-          {wardens.map((warden) => (
-            <li key={warden.id || warden._id} className="px-4 py-4 sm:px-6">
-              <div className="flex items-center justify-between">
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-indigo-600 truncate">
-                    {warden.first_name} {warden.last_name}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Staff Number: {warden.staff_number}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Location: {warden.location}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    Logged in: {formatTimestamp(warden.timestamp)}
-                  </p>
+          {wardens.map((warden) => {
+            const id = warden.id || warden._id || warden.Id || warden.ID;
+            return (
+              <li key={id} className="px-4 py-4 sm:px-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-indigo-600 truncate">
+                      {warden.first_name} {warden.last_name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Staff Number: {warden.staff_number}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Location: {warden.location}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      Logged in: {formatTimestamp(warden.timestamp)}
+                    </p>
+                  </div>
+                  <div className="ml-4 flex-shrink-0">
+                    <button
+                      onClick={() => handleDelete(warden)}
+                      className="font-medium text-red-600 hover:text-red-500"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
-                <div className="ml-4 flex-shrink-0">
-                  <button
-                    onClick={() => handleDelete(warden)}
-                    className="font-medium text-red-600 hover:text-red-500"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </li>
-          ))}
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

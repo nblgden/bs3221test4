@@ -34,7 +34,11 @@ export default function App() {
   async function fetchWardens() {
     try {
       const res = await axios.get(API_URL);
-      console.log('Fetched wardens data:', res.data);
+      console.log('API Response:', {
+        status: res.status,
+        headers: res.headers,
+        data: res.data
+      });
       setWardens(res.data);
     } catch (err) {
       console.error('Error fetching wardens:', err);
@@ -54,13 +58,20 @@ export default function App() {
 
   async function handleDelete(id) {
     try {
-      console.log('Attempting to delete warden with ID:', id);
+      console.log('Delete request URL:', `${API_URL}/${id}`);
       const response = await axios.delete(`${API_URL}/${id}`);
-      console.log('Delete response:', response.status);
+      console.log('Delete response:', {
+        status: response.status,
+        headers: response.headers,
+        data: response.data
+      });
       await fetchWardens();
     } catch (err) {
-      console.error('Error deleting warden:', err.response?.status, err.response?.data || err.message);
-      // Optionally show an error message to the user
+      console.error('Error deleting warden:', {
+        status: err.response?.status,
+        data: err.response?.data,
+        message: err.message
+      });
       alert('Failed to delete warden. Please try again.');
     }
   }
