@@ -34,9 +34,10 @@ export default function App() {
   async function fetchWardens() {
     try {
       const res = await axios.get(API_URL);
+      console.log('Fetched wardens data:', res.data);
       setWardens(res.data);
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching wardens:', err);
     }
   }
 

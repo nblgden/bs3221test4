@@ -13,6 +13,17 @@ export default function WardenList({ wardens, onDelete }) {
     });
   };
 
+  const handleDelete = (warden) => {
+    console.log('Warden object:', warden); // Debug log
+    const id = warden.id || warden._id; // Try both id and _id
+    if (!id) {
+      console.error('No ID found for warden:', warden);
+      alert('Cannot delete: No ID found for this warden');
+      return;
+    }
+    onDelete(id);
+  };
+
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
@@ -22,7 +33,7 @@ export default function WardenList({ wardens, onDelete }) {
       <div className="border-t border-gray-200">
         <ul className="divide-y divide-gray-200">
           {wardens.map((warden) => (
-            <li key={warden._id} className="px-4 py-4 sm:px-6">
+            <li key={warden.id || warden._id} className="px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-indigo-600 truncate">
@@ -40,7 +51,7 @@ export default function WardenList({ wardens, onDelete }) {
                 </div>
                 <div className="ml-4 flex-shrink-0">
                   <button
-                    onClick={() => onDelete(warden._id)}
+                    onClick={() => handleDelete(warden)}
                     className="font-medium text-red-600 hover:text-red-500"
                   >
                     Delete
