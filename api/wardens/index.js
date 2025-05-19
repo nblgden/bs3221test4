@@ -52,11 +52,22 @@ module.exports = async function (context, req) {
           return;
         }
 
-        // First check if the item exists
         try {
-          const { resource: existingItem } = await container.item(id).read();
-          if (!existingItem) {
-            context.log('Item not found for ID:', id);
+          // Query for the item first to get its _rid
+          const querySpec = {
+            query: "SELECT * FROM c WHERE c.id = @id",
+            parameters: [
+              {
+                name: "@id",
+                value: id
+              }
+            ]
+          };
+
+          const { resources: items } = await container.items.query(querySpec).fetchAll();
+          
+          if (items.length === 0) {
+            context.log('No item found with ID:', id);
             context.res = {
               status: 404,
               body: 'Warden not found'
@@ -64,25 +75,22 @@ module.exports = async function (context, req) {
             return;
           }
 
-          // If we get here, the item exists, so delete it
-          await container.item(id).delete();
-          context.log('Successfully deleted item with ID:', id);
+          const item = items[0];
+          context.log('Found item to delete:', item);
+
+          // Delete using the _rid
+          await container.item(item._rid).delete();
+          context.log('Successfully deleted item');
+          
           context.res = {
             status: 204
           };
         } catch (error) {
           context.log.error('Error during delete operation:', error);
-          if (error.code === 404) {
-            context.res = {
-              status: 404,
-              body: 'Warden not found'
-            };
-          } else {
-            context.res = {
-              status: 500,
-              body: 'Error deleting warden'
-            };
-          }
+          context.res = {
+            status: 500,
+            body: 'Error deleting warden: ' + error.message
+          };
         }
         break;
 
@@ -96,7 +104,7 @@ module.exports = async function (context, req) {
     context.log.error('Error:', error);
     context.res = {
       status: 500,
-      body: 'Internal server error'
+      body: 'Internal server error: ' + error.message
     };
   }
 }; 
