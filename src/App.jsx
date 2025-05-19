@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import AddWarden from './components/AddWarden'
+import React from 'react';
+import AddWarden from './components/AddWarden';
+import WardenList from './components/WardenList';
 
 const locations = [
   "Alwyn Hall", "Beech Glade", "Bowers Building", "Burma Road Student Village",
@@ -17,47 +17,6 @@ const locations = [
 const API_URL = '/api/wardens';
 
 export default function App() {
-  const [wardens, setWardens] = useState([]);
-  const [form, setForm] = useState({
-    staff_number: '',
-    first_name: '',
-    last_name: '',
-    location: locations[0],
-  });
-
-  useEffect(() => {
-    fetchWardens();
-  }, []);
-
-  async function fetchWardens() {
-    try {
-      const res = await axios.get(API_URL);
-      setWardens(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async function handleSubmit(e) {
-    e.preventDefault();
-    try {
-      await axios.post(API_URL, form);
-      setForm({ ...form, staff_number: '', first_name: '', last_name: '' });
-      fetchWardens();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
-  async function handleDelete(id) {
-    try {
-      await axios.delete(`${API_URL}/${id}`);
-      fetchWardens();
-    } catch (err) {
-      console.error(err);
-    }
-  }
-
   return (
     <div className="min-h-screen bg-gray-100">
       <header className="bg-white shadow">
@@ -70,6 +29,7 @@ export default function App() {
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
           <AddWarden />
+          <WardenList />
         </div>
       </main>
     </div>
