@@ -1,6 +1,18 @@
 import React from 'react';
 
 export default function WardenList({ wardens, onDelete }) {
+  const formatTimestamp = (timestamp) => {
+    if (!timestamp) return 'N/A';
+    const date = new Date(timestamp);
+    return date.toLocaleString('en-GB', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg">
       <div className="px-4 py-5 sm:px-6">
@@ -21,6 +33,9 @@ export default function WardenList({ wardens, onDelete }) {
                   </p>
                   <p className="text-sm text-gray-500">
                     Location: {warden.location}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Logged in: {formatTimestamp(warden.timestamp)}
                   </p>
                 </div>
                 <div className="ml-4 flex-shrink-0">
