@@ -1,23 +1,37 @@
 const { CosmosClient } = require('@azure/cosmos');
 
-// Get connection string from environment variables
-const connectionString = process.env.COSMOS_CONNECTION_STRING;
-if (!connectionString) {
-    throw new Error('COSMOS_CONNECTION_STRING environment variable is not set');
+let client, database, container;
+
+// Initialize Cosmos DB client
+function initializeCosmosClient(context) {
+    try {
+        // Get connection string from environment variables
+        const connectionString = process.env.COSMOS_CONNECTION_STRING;
+        if (!connectionString) {
+            throw new Error('COSMOS_CONNECTION_STRING environment variable is not set');
+        }
+
+        // Parse connection string
+        const endpoint = connectionString.split(';').find(s => s.startsWith('AccountEndpoint='))?.split('=')[1];
+        const key = connectionString.split(';').find(s => s.startsWith('AccountKey='))?.split('=')[1];
+
+        if (!endpoint || !key) {
+            throw new Error('Invalid connection string format');
+        }
+
+        context.log('Connecting to Cosmos DB at:', endpoint);
+
+        client = new CosmosClient({ endpoint, key });
+        database = client.database('bs3221cosmosdb');
+        container = database.container('wardens');
+    } catch (error) {
+        context.log.error('Failed to initialize Cosmos DB client:', error);
+        throw error;
+    }
 }
 
-// Parse connection string
-const endpoint = connectionString.split(';').find(s => s.startsWith('AccountEndpoint=')).split('=')[1];
-const key = connectionString.split(';').find(s => s.startsWith('AccountKey=')).split('=')[1];
-
-context.log('Connecting to Cosmos DB at:', endpoint);
-
-const client = new CosmosClient({ endpoint, key });
-const database = client.database('bs3221cosmosdb');
-const container = database.container('wardens');
-
 // Test database connection
-async function testConnection() {
+async function testConnection(context) {
     try {
         await database.read();
         context.log('Successfully connected to database');
@@ -31,8 +45,13 @@ module.exports = async function (context, req) {
     context.log('Wardens API called with method:', req.method);
 
     try {
+        // Initialize client if not already initialized
+        if (!client) {
+            initializeCosmosClient(context);
+        }
+
         // Test connection first
-        await testConnection();
+        await testConnection(context);
 
         switch (req.method) {
             case 'GET':
@@ -63,6 +82,9 @@ module.exports = async function (context, req) {
 
             case 'DELETE':
                 const id = req.params.id;
+                if (!id) {
+                    throw new Error('Warden ID is required for deletion');
+                }
                 context.log('Deleting warden with ID:', id);
                 await container.item(id).delete();
                 context.res = {
@@ -83,11 +105,17 @@ module.exports = async function (context, req) {
             stack: error.stack,
             details: error.details
         });
+        
+        // Set appropriate status code based on error type
+        const statusCode = error.code === 404 ? 404 : 
+                          error.code === 409 ? 409 : 
+                          error.code === 400 ? 400 : 500;
+
         context.res = {
-            status: 500,
+            status: statusCode,
             body: {
-                error: 'Internal server error',
-                details: error.message,
+                error: statusCode === 500 ? 'Internal server error' : error.message,
+                details: error.details || error.message,
                 code: error.code
             }
         };
