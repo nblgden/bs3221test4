@@ -41,25 +41,48 @@ module.exports = async function (context, req) {
 
       case 'DELETE':
         const id = context.bindingData.id;
+        context.log('Delete request received for ID:', id);
+        
         if (!id) {
+          context.log('No ID provided for deletion');
           context.res = {
             status: 400,
             body: 'ID is required for deletion'
           };
           return;
         }
-        
+
+        // First check if the item exists
         try {
+          const { resource: existingItem } = await container.item(id).read();
+          if (!existingItem) {
+            context.log('Item not found for ID:', id);
+            context.res = {
+              status: 404,
+              body: 'Warden not found'
+            };
+            return;
+          }
+
+          // If we get here, the item exists, so delete it
           await container.item(id).delete();
+          context.log('Successfully deleted item with ID:', id);
           context.res = {
             status: 204
           };
-        } catch (deleteError) {
-          context.log.error('Delete error:', deleteError);
-          context.res = {
-            status: 404,
-            body: 'Warden not found'
-          };
+        } catch (error) {
+          context.log.error('Error during delete operation:', error);
+          if (error.code === 404) {
+            context.res = {
+              status: 404,
+              body: 'Warden not found'
+            };
+          } else {
+            context.res = {
+              status: 500,
+              body: 'Error deleting warden'
+            };
+          }
         }
         break;
 

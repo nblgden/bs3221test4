@@ -53,10 +53,14 @@ export default function App() {
 
   async function handleDelete(id) {
     try {
-      await axios.delete(`${API_URL}/${id}`);
-      fetchWardens();
+      console.log('Attempting to delete warden with ID:', id);
+      const response = await axios.delete(`${API_URL}/${id}`);
+      console.log('Delete response:', response.status);
+      await fetchWardens();
     } catch (err) {
-      console.error(err);
+      console.error('Error deleting warden:', err.response?.status, err.response?.data || err.message);
+      // Optionally show an error message to the user
+      alert('Failed to delete warden. Please try again.');
     }
   }
 
