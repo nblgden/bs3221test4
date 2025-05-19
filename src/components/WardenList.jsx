@@ -1,0 +1,41 @@
+import React from 'react';
+
+export default function WardenList({ wardens, onDelete }) {
+  return (
+    <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+      <div className="px-4 py-5 sm:px-6">
+        <h3 className="text-lg leading-6 font-medium text-gray-900">Current Wardens</h3>
+        <p className="mt-1 max-w-2xl text-sm text-gray-500">List of all wardens and their locations</p>
+      </div>
+      <div className="border-t border-gray-200">
+        <ul className="divide-y divide-gray-200">
+          {wardens.map((warden) => (
+            <li key={warden._id} className="px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between">
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium text-indigo-600 truncate">
+                    {warden.first_name} {warden.last_name}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Staff Number: {warden.staff_number}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Location: {warden.location}
+                  </p>
+                </div>
+                <div className="ml-4 flex-shrink-0">
+                  <button
+                    onClick={() => onDelete(warden._id)}
+                    className="font-medium text-red-600 hover:text-red-500"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+} 

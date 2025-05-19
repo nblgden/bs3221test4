@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AddWarden from './components/AddWarden'
+import WardenList from './components/WardenList'
 
 const locations = [
   "Alwyn Hall", "Beech Glade", "Bowers Building", "Burma Road Student Village",
@@ -18,6 +19,7 @@ const API_URL = '/api/wardens';
 
 export default function App() {
   const [wardens, setWardens] = useState([]);
+  const [showWardens, setShowWardens] = useState(false);
   const [form, setForm] = useState({
     staff_number: '',
     first_name: '',
@@ -69,6 +71,21 @@ export default function App() {
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <button
+              onClick={() => setShowWardens(!showWardens)}
+              className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              {showWardens ? 'Hide Wardens' : 'View All Wardens'}
+            </button>
+          </div>
+          
+          {showWardens && (
+            <div className="mb-6">
+              <WardenList wardens={wardens} onDelete={handleDelete} />
+            </div>
+          )}
+          
           <AddWarden />
         </div>
       </main>
