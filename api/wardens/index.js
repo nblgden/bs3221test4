@@ -34,25 +34,23 @@ module.exports = async function (context, req) {
         // Test connection first
         await testConnection();
 
-        // Test endpoint: GET /api/wardens/test
-        if (req.method === 'GET' && req.url && req.url.endsWith('/test')) {
-            context.log('Test GET endpoint hit');
-            const { resources } = await container.items.readAll().fetchAll();
-            context.res = {
-                status: 200,
-                body: resources
-            };
-            return;
-        }
-
         switch (req.method) {
             case 'GET':
                 context.log('Fetching all wardens');
-                const { resources } = await container.items.readAll().fetchAll();
-                context.res = {
-                    status: 200,
-                    body: resources
-                };
+                try {
+                    const { resources } = await container.items.readAll().fetchAll();
+                    context.log('Successfully fetched wardens:', resources);
+                    context.res = {
+                        status: 200,
+                        body: resources,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    };
+                } catch (error) {
+                    context.log.error('Error fetching wardens:', error);
+                    throw new Error(`Failed to fetch wardens: ${error.message}`);
+                }
                 break;
 
             case 'POST':
