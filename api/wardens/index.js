@@ -1,10 +1,16 @@
 const { CosmosClient } = require('@azure/cosmos');
 
-const client = new CosmosClient({
-  endpoint: process.env.COSMOS_ENDPOINT,
-  key: process.env.COSMOS_KEY
-});
+// Get connection string from environment variables
+const connectionString = process.env.COSMOS_CONNECTION_STRING;
+if (!connectionString) {
+    throw new Error('COSMOS_CONNECTION_STRING environment variable is not set');
+}
 
+// Parse connection string
+const endpoint = connectionString.split(';').find(s => s.startsWith('AccountEndpoint=')).split('=')[1];
+const key = connectionString.split(';').find(s => s.startsWith('AccountKey=')).split('=')[1];
+
+const client = new CosmosClient({ endpoint, key });
 const database = client.database('fire-warden-db');
 const container = database.container('wardens');
 
