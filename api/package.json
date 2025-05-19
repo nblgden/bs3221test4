@@ -1,0 +1,9 @@
+{
+  "name": "fire-warden-api",
+  "version": "1.0.0",
+  "description": "Fire Warden Location Tracker API",
+  "main": "index.js",
+  "dependencies": {
+    "@azure/cosmos": "^3.17.3"
+  }
+} 
