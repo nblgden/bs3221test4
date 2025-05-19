@@ -10,16 +10,19 @@ if (!connectionString) {
 const endpoint = connectionString.split(';').find(s => s.startsWith('AccountEndpoint=')).split('=')[1];
 const key = connectionString.split(';').find(s => s.startsWith('AccountKey=')).split('=')[1];
 
+context.log('Connecting to Cosmos DB at:', endpoint);
+
 const client = new CosmosClient({ endpoint, key });
 const database = client.database('bs3221cosmosdb');
 const container = database.container('wardens');
 
 module.exports = async function (context, req) {
-  context.log('Wardens API called');
+  context.log('Wardens API called with method:', req.method);
 
   try {
     switch (req.method) {
       case 'GET':
+        context.log('Fetching all wardens');
         const { resources } = await container.items.readAll().fetchAll();
         context.res = {
           status: 200,
@@ -28,8 +31,10 @@ module.exports = async function (context, req) {
         break;
 
       case 'POST':
+        context.log('Creating new warden:', req.body);
         const newWarden = {
           ...req.body,
+          id: Date.now().toString(), // Add explicit ID
           timestamp: new Date().toISOString()
         };
         const { resource } = await container.items.create(newWarden);
@@ -41,6 +46,7 @@ module.exports = async function (context, req) {
 
       case 'DELETE':
         const id = req.params.id;
+        context.log('Deleting warden with ID:', id);
         await container.item(id).delete();
         context.res = {
           status: 204
@@ -54,10 +60,18 @@ module.exports = async function (context, req) {
         };
     }
   } catch (error) {
-    context.log.error('Error:', error);
+    context.log.error('Detailed error:', {
+      message: error.message,
+      code: error.code,
+      stack: error.stack,
+      details: error.details
+    });
     context.res = {
       status: 500,
-      body: 'Internal server error'
+      body: {
+        error: 'Internal server error',
+        details: error.message
+      }
     };
   }
 }; 
