@@ -22,7 +22,7 @@ export default function WardenList({ wardens, onDelete }) {
       <div className="border-t border-gray-200">
         <ul className="divide-y divide-gray-200">
           {wardens.map((warden) => (
-            <li key={warden._id} className="px-4 py-4 sm:px-6">
+            <li key={warden.id} className="px-4 py-4 sm:px-6">
               <div className="flex items-center justify-between">
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-indigo-600 truncate">
@@ -41,12 +41,18 @@ export default function WardenList({ wardens, onDelete }) {
                 <div className="ml-4 flex-shrink-0">
                   <button
                     onClick={() => {
-                      console.log('Deleting ID:', warden._id);
-                      onDelete(warden._id);
+                      console.log('Deleting ID:', warden.id);
+                      onDelete(warden.id);
                     }}
                     className="font-medium text-red-600 hover:text-red-500"
                   >
                     Delete
+                  </button>
+                  <button
+                    onClick={() => handleEdit(warden)}
+                    className="font-medium text-blue-600 hover:text-blue-500"
+                  >
+                    Edit
                   </button>
                 </div>
               </div>

@@ -26,6 +26,7 @@ export default function App() {
     last_name: '',
     location: locations[0],
   });
+  const [editingWarden, setEditingWarden] = useState(null);
 
   useEffect(() => {
     fetchWardens();
@@ -54,6 +55,20 @@ export default function App() {
   async function handleDelete(id) {
     try {
       await axios.delete(`${API_URL}/${id}`);
+      fetchWardens();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  function handleEdit(warden) {
+    setEditingWarden(warden);
+  }
+
+  async function handleUpdate(updatedWarden) {
+    try {
+      await axios.put(`${API_URL}/${updatedWarden.id}`, updatedWarden);
+      setEditingWarden(null);
       fetchWardens();
     } catch (err) {
       console.error(err);
