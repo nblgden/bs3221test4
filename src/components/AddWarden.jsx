@@ -51,6 +51,21 @@ export default function AddWarden() {
       <h2 className="text-2xl font-bold mb-4">Add New Warden</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
+          <label htmlFor="staff_number" className="block text-sm font-medium text-gray-700">
+            Staff Number
+          </label>
+          <input
+            type="text"
+            id="staff_number"
+            name="staff_number"
+            value={formData.staff_number}
+            onChange={handleChange}
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+        
+        <div>
           <label htmlFor="name" className="block text-sm font-medium text-gray-700">
             Name
           </label>
