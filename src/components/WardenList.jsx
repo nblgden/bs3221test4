@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
+import EditWardenModal from './EditWardenModal';
 
 export default function WardenList({ wardens, onDelete }) {
+  const [editingWarden, setEditingWarden] = useState(null);
+  
   const formatTimestamp = (timestamp) => {
     if (!timestamp) return 'N/A';
     const date = new Date(timestamp);
@@ -11,6 +14,27 @@ export default function WardenList({ wardens, onDelete }) {
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+  const handleEdit = (warden) => {
+    setEditingWarden(warden);
+  };
+
+  const handleSave = async (id, updatedData) => {
+    try {
+      const response = await fetch(`/api/wardens/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update warden');
+      }
+    } catch (error) {
+      console.error('Error updating warden:', error);
+    }
   };
 
   return (
@@ -60,6 +84,14 @@ export default function WardenList({ wardens, onDelete }) {
           ))}
         </ul>
       </div>
+      {/* render the EditWardenModal */}
+      {editingWarden && (
+        <EditWardenModal
+          warden={editingWarden}
+          onClose={() => setEditingWarden(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 } 

@@ -40,12 +40,26 @@ module.exports = async function (context, req) {
         break;
 
       case 'DELETE':
-        const id = req.params.id;
-        await container.item(id, id).delete();
+        const deleteId = req.params.id;
+        await container.item(deleteId, deleteId).delete();
         context.res = {
           status: 204
         };
         break;
+
+    case 'PUT':
+        const id = req.params.id;
+        const updatedWarden = {
+          ...req.body,
+          id: id, 
+          timestamp: new Date().toISOString()
+        };
+        const { resource: updatedResource } = await container.item(id, id).replace(updatedWarden);
+        context.res = {
+          status: 200,
+          body: updatedResource
+        };
+        break; 
 
       default:
         context.res = {
