@@ -29,6 +29,9 @@ export default function WardenList({ wardens, onDelete }) {
                     {warden.first_name} {warden.last_name}
                   </p>
                   <p className="text-sm text-gray-500">
+                    Name: {warden.name}
+                  </p>
+                  <p className="text-sm text-gray-500">
                     Staff Number: {warden.staff_number}
                   </p>
                   <p className="text-sm text-gray-500">
