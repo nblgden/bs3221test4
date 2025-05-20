@@ -46,6 +46,18 @@ export default function AddWarden() {
     }));
   };
 
+  const locations = [
+    "Alwyn Hall", "Beech Glade", "Bowers Building", "Burma Road Student Village",
+    "Centre for Sport", "Chapel", "The Cottage", "Fred Wheeler Building",
+    "Herbert Jarman Building", "Holm Lodge", "Kenneth Kettle Building",
+    "King Alfred Centre", "Martial Rose Library", "Masters Lodge", "Medecroft",
+    "Medecroft Annexe", "Paul Chamberlain Building", "Queen's Road Student Village",
+    "St Alphege", "St Edburga", "St Elizabeth's Hall", "St Grimbald's Court",
+    "St James' Hall", "St Swithun's Lodge", "The Stripe", "Business School",
+    "Tom Atkinson Building", "West Downs Centre", "West Downs Student Village",
+    "Winton Building", "Students' Union"
+  ];
+
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Add New Warden</h2>
@@ -84,16 +96,23 @@ export default function AddWarden() {
           <label htmlFor="location" className="block text-sm font-medium text-gray-700">
             Location
           </label>
-          <input
-            type="text"
+          <select
             id="location"
             name="location"
             value={formData.location}
             onChange={handleChange}
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-          />
+          >
+            <option value="">Select a location</option>
+            {locations.map((location) => (
+              <option key={location} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
         </div>
+
 
         <div>
           <label htmlFor="status" className="block text-sm font-medium text-gray-700">
