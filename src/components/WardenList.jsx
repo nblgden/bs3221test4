@@ -59,6 +59,9 @@ export default function WardenList({ wardens, onDelete }) {
                     Location: {warden.location}
                   </p>
                   <p className="text-sm text-gray-500">
+                    Status: {warden.status}
+                  </p>
+                  <p className="text-sm text-gray-500">
                     Logged in: {formatTimestamp(warden.timestamp)}
                   </p>
                 </div>
