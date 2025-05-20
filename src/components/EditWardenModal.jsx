@@ -16,6 +16,18 @@ export default function EditWardenModal({ warden, onClose, onSave }) {
       [name]: value
     }));
   };
+  
+  const locations = [
+    "Alwyn Hall", "Beech Glade", "Bowers Building", "Burma Road Student Village",
+    "Centre for Sport", "Chapel", "The Cottage", "Fred Wheeler Building",
+    "Herbert Jarman Building", "Holm Lodge", "Kenneth Kettle Building",
+    "King Alfred Centre", "Martial Rose Library", "Masters Lodge", "Medecroft",
+    "Medecroft Annexe", "Paul Chamberlain Building", "Queen's Road Student Village",
+    "St Alphege", "St Edburga", "St Elizabeth's Hall", "St Grimbald's Court",
+    "St James' Hall", "St Swithun's Lodge", "The Stripe", "Business School",
+    "Tom Atkinson Building", "West Downs Centre", "West Downs Student Village",
+    "Winton Building", "Students' Union"
+  ];
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -70,20 +82,28 @@ export default function EditWardenModal({ warden, onClose, onSave }) {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
             />
           </div>
+          
           <div>
             <label htmlFor="location" className="block text-sm font-medium text-gray-700">
               Location
             </label>
-            <input
-              type="text"
+            <select
               id="location"
               name="location"
               value={formData.location}
               onChange={handleChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
+            >
+              <option value="">Select a location</option>
+              {locations.map((location) => (
+                <option key={location} value={location}>
+                  {location}
+                </option>
+              ))}
+            </select>
           </div>
+          
           <div>
             <label htmlFor="status" className="block text-sm font-medium text-gray-700">
               Status
