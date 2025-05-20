@@ -84,6 +84,14 @@ export default function WardenList({ wardens, onDelete }) {
           ))}
         </ul>
       </div>
+      {/* render the EditWardenModal */}
+      {editingWarden && (
+        <EditWardenModal
+          warden={editingWarden}
+          onClose={() => setEditingWarden(null)}
+          onSave={handleSave}
+        />
+      )}
     </div>
   );
 } 
