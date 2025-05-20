@@ -76,16 +76,30 @@ export default function AddWarden() {
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
           />
         </div>
-        
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Name
+          <label htmlFor="first_name" className="block text-sm font-medium text-gray-700">
+            First Name
           </label>
           <input
             type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+            id="first_name"
+            name="first_name"
+            value={formData.first_name}
+            onChange={handleChange}
+            required
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+          />
+        </div>
+
+        <div>
+          <label htmlFor="last_name" className="block text-sm font-medium text-gray-700">
+            Last Name
+          </label>
+          <input
+            type="text"
+            id="last_name"
+            name="last_name"
+            value={formData.last_name}
             onChange={handleChange}
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
