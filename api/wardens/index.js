@@ -41,7 +41,7 @@ module.exports = async function (context, req) {
 
       case 'DELETE':
         const id = req.params.id;
-        await container.item(id).delete();
+        await container.item(id, id).delete();
         context.res = {
           status: 204
         };
