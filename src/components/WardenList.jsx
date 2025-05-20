@@ -40,7 +40,10 @@ export default function WardenList({ wardens, onDelete }) {
                 </div>
                 <div className="ml-4 flex-shrink-0">
                   <button
-                    onClick={() => onDelete(warden._id)}
+                    onClick={() => {
+                      console.log('Deleting ID:', warden._id);
+                      onDelete(warden._id);
+                    }}
                     className="font-medium text-red-600 hover:text-red-500"
                   >
                     Delete
